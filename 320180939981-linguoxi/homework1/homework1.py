@@ -7,6 +7,8 @@ And there are three argument  eg. python homework.py -v=4.4 -r=3 -c=True
 -r The revision number you want to query from the base version'
 -c (bool)cumulative or not
 
+and the result will be saved into savelog.txt
+
 thanks to team 3 and my friends
 """
 __author__ = "Guoxi Lin"
@@ -47,12 +49,12 @@ class ContentException(BaseException):
 class Log_Collect:
 
     """
-        $python homework.py -v=v4.4 -r=3
-        $#sublevel commits v4.4 stable fixes
-        $lv hour bugs
-        $1 20 69
-        $2 37 120
-        $3 45 136
+        python homework.py -v=v4.4 -r=3
+        #sublevel commits v4.4 stable fixes
+        lv hour bugs
+        1 20 69
+        2 37 120
+        3 45 136
     """
     """get the argument"""
     def __init__(self):
@@ -78,6 +80,7 @@ class Log_Collect:
         gettime = "git log -1 --pretty=format:\"%ct\" " + v1
         get_time = subprocess.Popen(gettime, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, shell=True)
         self.basetime = int(get_time.communicate()[0])
+
     """commit cnt here"""
     def get_commit_cnt(self, git_cmd):#change into date
         try:
@@ -91,16 +94,21 @@ class Log_Collect:
            # if we request something that does not exist -> 0
         cnt = re.findall('[0-9]*-[0-9]*-[0-9]*', str(raw_counts))
         return len(cnt)
+
     """translate into date"""
     def get_tag_days(self, git_cmd, base):#change into date
+
        try:
            seconds = git_cmd.communicate()[0]
+           SeePerDay = 3600 * 24
            if seconds == 0:
                raise ContentException
        except ContentException as err:
            print(err)
            sys.exit(2)
-       return (int(seconds)-base)//(3600*24)# we need the day as normal
+
+       return (int(seconds)-base)//SeePerDay# we need the day as normal
+
     """do what i can do"""
     def main(self, cumulative, rev_range):
 
@@ -133,4 +141,17 @@ class Log_Collect:
                 break
 
 if __name__ == '__main__':
+    """
+        $python homework.py -v=v4.4 -r=3
+        #sublevel commits v4.4 stable fixes
+        lv hour bugs
+        1 20 69
+        2 37 120
+        3 45 136
+    """
     githistory = Log_Collect()
+    with open("savelog.txt", "w") as f:  # and save them into a text file
+        f.write("sl  days  commit_cnt\n")
+        for i in githistory.collect:
+            f.write(str(i))
+            f.write('\n')
