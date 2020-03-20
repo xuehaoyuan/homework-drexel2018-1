@@ -5,7 +5,7 @@
 a project and the time they were uploaded. Submissions represents the
 number of times, and time represents time.."""
 
-__author__      = "Xiangwen Qiao, class4, Data science, Lanzhou university"
+__author__      = "Xiangwen Qiao，Wenyao Chen, class4, Data science, Lanzhou university"
 __copyright__   = "Copyright 2020, Project of Data science in python"
 __version__ = "0.1"
 
